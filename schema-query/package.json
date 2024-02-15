@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "dev": "node --watch index.js"
   },
@@ -15,6 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "@apollo/server": "^4.10.0",
-    "graphql": "^16.8.1"
+    "graphql": "^16.8.1",
+    "graphql-tag": "^2.12.6"
   }
 }
