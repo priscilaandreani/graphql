@@ -24,6 +24,10 @@ const typeDefs = gql`
 `;
 
 const resolvers = {
+  User: {
+    salary: (user) => user.net_salary,
+  },
+
   Query: {
     hello: () => "Hello, world!",
     hour: () => new Date(),
@@ -32,7 +36,7 @@ const resolvers = {
       name: "John Doe",
       email: "johndoe@example.com",
       age: 25,
-      salary: 4579.3,
+      net_salary: 4579.51,
       vip: true,
     }),
   },
