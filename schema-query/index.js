@@ -15,17 +15,34 @@ const typeDefs = gql`
     vip: Boolean
   }
 
+  type Product {
+    name: String!
+    price: Float!
+    disccount: Float
+    salePrice: Float
+  }
+
   # Entry point for the schema
   type Query {
     hello: String
     hour: Date
     loggedUser: User
+    featuredProduct: Product
   }
 `;
 
 const resolvers = {
   User: {
     salary: (user) => user.net_salary,
+  },
+
+  Product: {
+    salePrice: (product) => {
+      if (product.disccount) {
+        return (product.price - product.price * product.disccount).toFixed(2);
+      }
+      return product.price;
+    },
   },
 
   Query: {
@@ -38,6 +55,11 @@ const resolvers = {
       age: 25,
       net_salary: 4579.51,
       vip: true,
+    }),
+    featuredProduct: () => ({
+      name: "Notebook",
+      price: 1999.99,
+      disccount: 0.5,
     }),
   },
 };
