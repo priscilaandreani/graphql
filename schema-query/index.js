@@ -6,10 +6,20 @@ const typeDefs = gql`
   # Custom scalar to represent a Date
   scalar Date
 
+  type User {
+    id: ID!
+    name: String!
+    email: String!
+    age: Int
+    salary: Float
+    vip: Boolean
+  }
+
   # Entry point for the schema
   type Query {
     hello: String
     hour: Date
+    loggedUser: User
   }
 `;
 
@@ -17,6 +27,14 @@ const resolvers = {
   Query: {
     hello: () => "Hello, world!",
     hour: () => new Date(),
+    loggedUser: () => ({
+      id: 1,
+      name: "John Doe",
+      email: "johndoe@example.com",
+      age: 25,
+      salary: 4579.3,
+      vip: true,
+    }),
   },
 };
 
