@@ -5,6 +5,7 @@ export const users = [
     email: "johndoe@example.com",
     age: 25,
     profile_id: 1,
+    status: "ACTIVE",
   },
   {
     id: 2,
@@ -12,6 +13,7 @@ export const users = [
     email: "jane@exampel.com",
     age: 30,
     profile_id: 2,
+    status: "INACTIVE",
   },
   {
     id: 3,
@@ -19,16 +21,17 @@ export const users = [
     email: "alice@example.com",
     age: 35,
     profile_id: 1,
+    status: "BLOCKED",
   },
 ];
 
 export const profiles = [
   {
     id: 1,
-    type: "Admin",
+    type: "ADMIN",
   },
   {
     id: 2,
-    type: "User",
+    type: "USER",
   },
 ];

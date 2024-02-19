@@ -1,7 +1,18 @@
 export const Users = /* GraphQL */ `
+  enum UserStatus {
+    ACTIVE
+    INACTIVE
+    BLOCKED
+  }
+
+  enum ProfileType {
+    ADMIN
+    USER
+  }
+
   type Profile {
     id: ID!
-    type: String!
+    type: ProfileType!
   }
 
   type User {
@@ -12,5 +23,6 @@ export const Users = /* GraphQL */ `
     salary: Float
     vip: Boolean
     profile: Profile
+    status: UserStatus
   }
 `;
