@@ -1,129 +1,15 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-import { gql } from "graphql-tag";
+import { makeExecutableSchema } from "@graphql-tools/schema";
+import { resolvers } from "./resolvers/index.js";
+import typeDefs from "./schema/index.js";
 
-const users = [
-  {
-    id: 1,
-    name: "John Doe",
-    email: "johndoe@example.com",
-    age: 25,
-    profile_id: 1,
-  },
-  {
-    id: 2,
-    name: "Jane Doe",
-    email: "jane@exampel.com",
-    age: 30,
-    profile_id: 2,
-  },
-  {
-    id: 3,
-    name: "Alice",
-    email: "alice@example.com",
-    age: 35,
-    profile_id: 1,
-  },
-];
-
-const profiles = [
-  {
-    id: 1,
-    name: "Admin",
-  },
-  {
-    id: 2,
-    name: "User",
-  },
-];
-
-const typeDefs = gql`
-  # Custom scalar to represent a Date
-  scalar Date
-
-  type Profile {
-    id: ID!
-    name: String!
-  }
-
-  type User {
-    id: ID!
-    name: String!
-    email: String!
-    age: Int
-    salary: Float
-    vip: Boolean
-    profile: Profile
-  }
-
-  type Product {
-    name: String!
-    price: Float!
-    disccount: Float
-    salePrice: Float
-  }
-
-  # Entry point for the schema
-  type Query {
-    hello: String
-    hour: Date
-    loggedUser: User
-    featuredProduct: Product
-    lotteryNumbers: [Int!]!
-    users: [User!]!
-    user(id: ID): User
-    profiles: [Profile!]!
-    profile(id: ID): Profile
-  }
-`;
-
-const resolvers = {
-  User: {
-    salary: (user) => user.net_salary,
-    profile: (user) =>
-      profiles.find((profile) => profile.id == user.profile_id),
-  },
-  Product: {
-    salePrice: (product) => {
-      if (product.disccount) {
-        return (product.price - product.price * product.disccount).toFixed(2);
-      }
-      return product.price;
-    },
-  },
-
-  Query: {
-    hello: () => "Hello, world!",
-    hour: () => new Date(),
-    loggedUser: () => ({
-      id: 1,
-      name: "John Doe",
-      email: "johndoe@example.com",
-      age: 25,
-      net_salary: 4579.51,
-      vip: true,
-    }),
-    featuredProduct: () => ({
-      name: "Notebook",
-      price: 1999.99,
-      disccount: 0.5,
-    }),
-    lotteryNumbers: () =>
-      Array(6)
-        .fill(0)
-        .map((n) => parseInt(Math.random() * 60 + 1))
-        .sort((a, b) => a - b),
-    users: () => users,
-    user: (_, { id }) => users.find((user) => user.id == id),
-    profiles: () => profiles,
-    profile: (_, { id }) => profiles.find((profile) => profile.id == id),
-  },
-};
-
-const server = new ApolloServer({
+const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
 });
+
+const server = new ApolloServer({ schema });
 
 const { url } = await startStandaloneServer(server);
 
