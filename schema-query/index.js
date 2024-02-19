@@ -2,9 +2,49 @@ import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { gql } from "graphql-tag";
 
+const users = [
+  {
+    id: 1,
+    name: "John Doe",
+    email: "johndoe@example.com",
+    age: 25,
+    profile_id: 1,
+  },
+  {
+    id: 2,
+    name: "Jane Doe",
+    email: "jane@exampel.com",
+    age: 30,
+    profile_id: 2,
+  },
+  {
+    id: 3,
+    name: "Alice",
+    email: "alice@example.com",
+    age: 35,
+    profile_id: 1,
+  },
+];
+
+const profiles = [
+  {
+    id: 1,
+    name: "Admin",
+  },
+  {
+    id: 2,
+    name: "User",
+  },
+];
+
 const typeDefs = gql`
   # Custom scalar to represent a Date
   scalar Date
+
+  type Profile {
+    id: ID!
+    name: String!
+  }
 
   type User {
     id: ID!
@@ -13,6 +53,7 @@ const typeDefs = gql`
     age: Int
     salary: Float
     vip: Boolean
+    profile: Profile
   }
 
   type Product {
@@ -29,14 +70,19 @@ const typeDefs = gql`
     loggedUser: User
     featuredProduct: Product
     lotteryNumbers: [Int!]!
+    users: [User!]!
+    user(id: ID): User
+    profiles: [Profile!]!
+    profile(id: ID): Profile
   }
 `;
 
 const resolvers = {
   User: {
     salary: (user) => user.net_salary,
+    profile: (user) =>
+      profiles.find((profile) => profile.id == user.profile_id),
   },
-
   Product: {
     salePrice: (product) => {
       if (product.disccount) {
@@ -67,6 +113,10 @@ const resolvers = {
         .fill(0)
         .map((n) => parseInt(Math.random() * 60 + 1))
         .sort((a, b) => a - b),
+    users: () => users,
+    user: (_, { id }) => users.find((user) => user.id == id),
+    profiles: () => profiles,
+    profile: (_, { id }) => profiles.find((profile) => profile.id == id),
   },
 };
 
